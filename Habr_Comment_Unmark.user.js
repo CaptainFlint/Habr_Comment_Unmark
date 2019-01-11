@@ -15,6 +15,22 @@
 if (window != window.top)
 	return;
 
+// Convets month names (in relative form) to the number
+var monthName2Number = {
+	'января':   '01',
+	'февраля':  '02',
+	'марта':    '03',
+	'апреля':   '04',
+	'мая':      '05',
+	'июня':     '06',
+	'июля':     '07',
+	'августа':  '08',
+	'сентября': '09',
+	'октября':  '00',
+	'ноября':   '11',
+	'декабря':  '12'
+};
+
 function fmt2(v) {
 	return ((v > 9) ? '' : '0') + v;
 }
@@ -29,8 +45,16 @@ function translateDate(d) {
 		var yesterday = new Date(loadDate.getTime() - 24 * 3600 * 1000);
 		parts[0] = yesterday.getFullYear() + '-' + fmt2(yesterday.getMonth() + 1) + '-' + fmt2(yesterday.getDate());
 	}
-	else {
+	else if (parts[0].match(/\d+\.\d+\.\d+/)) {
 		parts[0] = '20' + parts[0].split('.').reverse().join('-')
+	}
+	else {
+		var date_parts = parts[0].split(' ');
+		date_parts[1] = monthName2Number[date_parts[1]];
+		if (date_parts[0].length == 1) {
+			date_parts[0] = '0' + date_parts[0];
+		}
+		parts[0] = date_parts.reverse().join('-')
 	}
 	return parts.join(' ');
 }
